@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GraphGeometry } from './GraphGeometry';
 
 const scene = new THREE.Scene();
@@ -13,14 +14,20 @@ camera.position.z = 6;
 const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('webgl') });
 renderer.setSize(window.innerWidth, window.innerHeight);
 
-const graph = new GraphGeometry('pyramid', 2, 3);
-// baseSize 2, altura 3
+//const graph = new GraphGeometry('pyramid', 2, 3);
+//const graph = new GraphGeometry('cube', 2);
+//const graph = new GraphGeometry('prism', 2, 1, 0.5)
+//const graph = new GraphGeometry('octahedron', 2)
+const graph = new GraphGeometry('triangle', 2)
 
 scene.add(graph);
 
+const controls = new OrbitControls(camera, renderer.domElement)
+controls.enableDamping = true
+
 function animate() {
   requestAnimationFrame(animate);
-  graph.rotation.y += 0.0050;
+  controls.update();
   renderer.render(scene, camera);
 }
 animate();

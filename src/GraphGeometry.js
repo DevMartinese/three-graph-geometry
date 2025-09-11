@@ -73,6 +73,84 @@ export class GraphGeometry extends THREE.Group {
         break;
       }
 
+      case 'cube': {
+        const [size = 2] = params;
+        // 8 vértices del cubo
+        nodes = [
+          new THREE.Vector3(-size, -size, -size),
+          new THREE.Vector3(size, -size, -size),
+          new THREE.Vector3(size, size, -size),
+          new THREE.Vector3(-size, size, -size),
+          new THREE.Vector3(-size, -size, size),
+          new THREE.Vector3(size, -size, size),
+          new THREE.Vector3(size, size, size),
+          new THREE.Vector3(-size, size, size),
+        ];
+        // 12 aristas del cubo
+        edges = [
+          [0,1],[1,2],[2,3],[3,0], // base inferior
+          [4,5],[5,6],[6,7],[7,4], // base superior
+          [0,4],[1,5],[2,6],[3,7]  // verticales
+        ];
+        break;
+      }
+      case 'prism': {
+        const [width = 2, height = 2, depth = 1] = params;
+        // 8 vértices del prisma rectangular
+        nodes = [
+          new THREE.Vector3(-width, -height, -depth),
+          new THREE.Vector3(width, -height, -depth),
+          new THREE.Vector3(width, height, -depth),
+          new THREE.Vector3(-width, height, -depth),
+          new THREE.Vector3(-width, -height, depth),
+          new THREE.Vector3(width, -height, depth),
+          new THREE.Vector3(width, height, depth),
+          new THREE.Vector3(-width, height, depth),
+        ];
+        edges = [
+          [0,1],[1,2],[2,3],[3,0],
+          [4,5],[5,6],[6,7],[7,4],
+          [0,4],[1,5],[2,6],[3,7]
+        ];
+        break;
+      }
+      case 'octahedron': {
+        const [size = 2] = params;
+        nodes = [
+          new THREE.Vector3(0, size, 0),
+          new THREE.Vector3(-size, 0, 0),
+          new THREE.Vector3(0, 0, size),
+          new THREE.Vector3(size, 0, 0),
+          new THREE.Vector3(0, 0, -size),
+          new THREE.Vector3(0, -size, 0),
+        ];
+        edges = [
+          [0,1],[0,2],[0,3],[0,4],
+          [5,1],[5,2],[5,3],[5,4],
+          [1,2],[2,3],[3,4],[4,1]
+        ];
+        break;
+      }
+      case 'line': {
+        const [length = 2] = params;
+        nodes = [
+          new THREE.Vector3(-length/2, 0, 0),
+          new THREE.Vector3(length/2, 0, 0)
+        ];
+        edges = [[0,1]];
+        break;
+      }
+      case 'triangle': {
+        const [size = 2] = params;
+        nodes = [
+          new THREE.Vector3(0, size, 0),
+          new THREE.Vector3(-size, -size, 0),
+          new THREE.Vector3(size, -size, 0)
+        ];
+        edges = [[0,1],[1,2],[2,0]];
+        break;
+      }
+
       default:
         console.warn(`GraphGeometry: Unknown type "${type}"`);
         break;
