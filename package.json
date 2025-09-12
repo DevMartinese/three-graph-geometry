@@ -60,5 +60,8 @@
   "devDependencies": {
     "vite": "^7.1.2",
     "vitepress": "^1.6.4"
+  },
+  "dependencies": {
+    "three-graph-geometry": "^0.1.0"
   }
 }
