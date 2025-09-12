@@ -1,7 +1,7 @@
 // main.js
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { GraphGeometry } from './GraphGeometry.js';
+import { GraphGeometry, registerPreset, listPresets } from './GraphGeometry.js';
 import GUI from 'lil-gui';
 
 const scene = new THREE.Scene();
@@ -21,12 +21,20 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
 // ---------------- GUI ----------------
-const gui = new GUI();
-const presets = [
+
+// Presets internos (los que están en GraphGeometry por defecto)
+const builtInPresets = [
   'cube', 'pyramid', 'prism', 'octahedron', 'triangle', 'line',
   'cone', 'star', 'circular', 'grid', 'lattice',
-  'spokes', 'polyline', 'paths' // 👈 nuevos
+  'spokes', 'polyline', 'paths'
 ];
+
+// 🔥 Combina internos + externos
+function getAllPresets() {
+  return [...builtInPresets, ...listPresets()];
+}
+
+const gui = new GUI();
 
 const params = {
   preset: 'cube',
@@ -188,32 +196,26 @@ function buildGraph() {
     nodeColors: nodeColorsArray
   };
 
-  switch (params.preset) {
-    case 'cube':       graph = new GraphGeometry('cube', params.size, styleOpts); break;
-    case 'pyramid':    graph = new GraphGeometry('pyramid', params.baseSize, params.height, styleOpts); break;
-    case 'prism':      graph = new GraphGeometry('prism', params.width, params.pHeight, params.depth, styleOpts); break;
-    case 'octahedron': graph = new GraphGeometry('octahedron', params.oSize, styleOpts); break;
-    case 'triangle':   graph = new GraphGeometry('triangle', params.tSize, styleOpts); break;
-    case 'line':       graph = new GraphGeometry('line', params.length, styleOpts); break;
-    case 'cone':       graph = new GraphGeometry('cone', params.cRadius, params.cHeight, params.baseSegments, styleOpts); break;
-    case 'star':       graph = new GraphGeometry('star', params.count, params.radius, styleOpts); break;
-    case 'circular':   graph = new GraphGeometry('circular', params.count, params.radius, styleOpts); break;
-    case 'grid':       graph = new GraphGeometry('grid', params.rows, params.cols, params.spacing, styleOpts); break;
-    case 'lattice':    graph = new GraphGeometry('lattice', params.nx, params.ny, params.nz, params.lSpacing, styleOpts); break;
-
-    // nuevos
-    case 'spokes':
-      graph = new GraphGeometry('spokes', params.spokesCount, params.spokesLen, params.spokesOffset, styleOpts);
-      break;
-    case 'polyline':
-      graph = new GraphGeometry('polyline', safeParse(params.polylineJSON, []), styleOpts);
-      break;
-    case 'paths':
-      graph = new GraphGeometry('paths', safeParse(params.pathsJSON, []), { ...styleOpts, merge: params.merge, mergeTolerance: params.mergeTol });
-      break;
-
-    default:
-      graph = new GraphGeometry('cube', 2, styleOpts);
+  if (!builtInPresets.includes(params.preset)) {
+    // externo (registrado con registerPreset)
+    graph = new GraphGeometry(params.preset, styleOpts);
+  } else {
+    switch (params.preset) {
+      case 'cube':       graph = new GraphGeometry('cube', params.size, styleOpts); break;
+      case 'pyramid':    graph = new GraphGeometry('pyramid', params.baseSize, params.height, styleOpts); break;
+      case 'prism':      graph = new GraphGeometry('prism', params.width, params.pHeight, params.depth, styleOpts); break;
+      case 'octahedron': graph = new GraphGeometry('octahedron', params.oSize, styleOpts); break;
+      case 'triangle':   graph = new GraphGeometry('triangle', params.tSize, styleOpts); break;
+      case 'line':       graph = new GraphGeometry('line', params.length, styleOpts); break;
+      case 'cone':       graph = new GraphGeometry('cone', params.cRadius, params.cHeight, params.baseSegments, styleOpts); break;
+      case 'star':       graph = new GraphGeometry('star', params.count, params.radius, styleOpts); break;
+      case 'circular':   graph = new GraphGeometry('circular', params.count, params.radius, styleOpts); break;
+      case 'grid':       graph = new GraphGeometry('grid', params.rows, params.cols, params.spacing, styleOpts); break;
+      case 'lattice':    graph = new GraphGeometry('lattice', params.nx, params.ny, params.nz, params.lSpacing, styleOpts); break;
+      case 'spokes':     graph = new GraphGeometry('spokes', params.spokesCount, params.spokesLen, params.spokesOffset, styleOpts); break;
+      case 'polyline':   graph = new GraphGeometry('polyline', safeParse(params.polylineJSON, []), styleOpts); break;
+      case 'paths':      graph = new GraphGeometry('paths', safeParse(params.pathsJSON, []), { ...styleOpts, merge: params.merge, mergeTolerance: params.mergeTol }); break;
+    }
   }
 
   scene.add(graph);
@@ -224,7 +226,7 @@ let folders = {};
 function setupGUI() {
   gui.children.slice().forEach(c => gui.remove(c));
 
-  gui.add(params, 'preset', presets).name('Preset').onChange(() => {
+  gui.add(params, 'preset', getAllPresets()).name('Preset').onChange(() => {
     updateVisibility();
     buildGraph();
   });
@@ -295,7 +297,6 @@ function setupGUI() {
   folders.lattice.add(params, 'nz', 1, 10, 1).name('nz (cells)').onChange(buildGraph);
   folders.lattice.add(params, 'lSpacing', 0.5, 5, 0.1).name('spacing').onChange(buildGraph);
 
-  // ---- nuevos ----
   folders.spokes = gui.addFolder('Spokes');
   folders.spokes.add(params, 'spokesCount', 1, 16, 1).onChange(buildGraph);
   folders.spokes.add(params, 'spokesLen', 0.2, 10, 0.1).onChange(buildGraph);
