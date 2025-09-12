@@ -1,0 +1,24 @@
+# Development files
+src/main.js
+src/style.css
+index.html
+vite.svg
+
+# Documentation builds
+docs/
+.vitepress/
+
+# Development tools
+.claude/
+*.log
+.DS_Store
+node_modules/
+.git/
+
+# Keep these for NPM
+!dist/
+!README.md
+!package.json
+!LICENSE
+!src/GraphGeometry.js
+!src/index.js
