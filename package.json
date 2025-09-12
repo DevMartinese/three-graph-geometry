@@ -1,16 +1,48 @@
 {
   "name": "three-graph-geometry",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "An extension for Three.js that turns graphs (nodes + edges) into reusable 3D geometries.",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "release": "npm publish --access public"
   },
+  "keywords": [
+    "three",
+    "three.js",
+    "geometry",
+    "graph",
+    "3d-graph",
+    "visualization",
+    "webgl"
+  ],
+  "author": "Gonzalo Martinesse <devamartinese@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevMartinese/three-graph-geometry.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DevMartinese/three-graph-geometry/issues"
+  },
+  "homepage": "https://github.com/DevMartinese/three-graph-geometry#readme",
   "devDependencies": {
     "vite": "^7.1.2",
     "vitepress": "^1.6.4"
