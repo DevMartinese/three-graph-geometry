@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GraphGeometry } from './src/index';
+import { GraphGeometry } from 'three-graph-geometry';
 
 class ComparisonDemo {
     constructor() {

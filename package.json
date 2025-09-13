@@ -62,6 +62,6 @@
     "vitepress": "^1.6.4"
   },
   "dependencies": {
-    "three-graph-geometry": "^0.1.0"
+    "three-graph-geometry": "^0.2.0"
   }
 }
