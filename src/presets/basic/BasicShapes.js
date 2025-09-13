@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 
 export class BasicShapes {
-  static cube(size = 2) {
+  static cube(size = 2, options = {}) {
+    const { includeFaceCenters = false } = options;
+  
     const nodes = [
       new THREE.Vector3(-size, -size, -size),
       new THREE.Vector3( size, -size, -size),
@@ -12,13 +14,29 @@ export class BasicShapes {
       new THREE.Vector3( size,  size,  size),
       new THREE.Vector3(-size,  size,  size),
     ];
-    
+  
     const edges = [
       [0,1],[1,2],[2,3],[3,0],
       [4,5],[5,6],[6,7],[7,4],
       [0,4],[1,5],[2,6],[3,7]
     ];
-
+  
+    if (includeFaceCenters) {
+      const faceCenters = [
+        [0,1,2,3], [4,5,6,7],
+        [0,1,5,4], [3,2,6,7],
+        [1,2,6,5], [0,3,7,4]
+      ];
+      faceCenters.forEach(face => {
+        const center = new THREE.Vector3();
+        face.forEach(i => center.add(nodes[i]));
+        center.divideScalar(4);
+        const idx = nodes.length;
+        nodes.push(center);
+        face.forEach(i => edges.push([idx, i]));
+      });
+    }
+  
     return { nodes, edges };
   }
 

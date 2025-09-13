@@ -30,7 +30,13 @@ import { GraphGeometry } from 'three-graph-geometry';
 const scene = new THREE.Scene();
 
 // Create a cube graph
-const cubeGraph = new GraphGeometry('cube', 2);
+const cubeGraph = new GraphGeometry('cube', 1, {
+  nodeColor: 0x4ecdc4,
+  edgeColor: 0x45b7d1,
+  nodeRadius: 0.12,
+  edgeRadius: 0.02,
+  includeFaceCenters: true // new feature added
+});
 scene.add(cubeGraph);
 
 // Create a star network with custom styling

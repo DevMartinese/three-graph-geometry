@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GraphGeometry } from 'three-graph-geometry';
+import { GraphGeometry } from './src/index';
 
 class ComparisonDemo {
     constructor() {
@@ -131,7 +131,8 @@ class ComparisonDemo {
             nodeColor: 0x4ecdc4,
             edgeColor: 0x45b7d1,
             nodeRadius: 0.12,
-            edgeRadius: 0.02
+            edgeRadius: 0.02,
+            includeFaceCenters: true
         });
         cubeGraph.position.set(position.x + 1.5, 2, position.z);
         cubeGraph.userData.type = 'graph';

@@ -20,7 +20,17 @@ export class GraphGeometry extends GraphRenderer {
       nodes = n;
       edges = e;
     } else {
-      const result = this.generateBuiltInPreset(type, params);
+      const presetParams = [...params];
+      const lastParam = presetParams[presetParams.length - 1];
+      const isLastObject = typeof lastParam === 'object' && !Array.isArray(lastParam);
+
+      if (isLastObject) {
+        presetParams[presetParams.length - 1] = { ...lastParam, ...options };
+      } else {
+        presetParams.push({ ...options });
+      }
+
+      const result = this.generateBuiltInPreset(type, presetParams);
       nodes = result.nodes;
       edges = result.edges;
     }
