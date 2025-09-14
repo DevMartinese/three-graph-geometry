@@ -30,17 +30,16 @@ import { GraphGeometry } from 'three-graph-geometry';
 const scene = new THREE.Scene();
 
 // Create a cube graph
-const cubeGraph = new GraphGeometry('cube', 1, {
+const cubeGraph = new GraphGeometry('cube', 1, { includeFaceCenters: true }, {
   nodeColor: 0x4ecdc4,
   edgeColor: 0x45b7d1,
   nodeRadius: 0.12,
-  edgeRadius: 0.02,
-  includeFaceCenters: true // new feature added
+  edgeRadius: 0.02
 });
 scene.add(cubeGraph);
 
 // Create a star network with custom styling
-const starGraph = new GraphGeometry('star', 8, 3, {
+const starGraph = new GraphGeometry('star', 8, 2, {
   nodeColor: 0xff6b6b,
   edgeColor: 0x4ecdc4,
   nodeRadius: 0.2,
@@ -153,13 +152,13 @@ const customGraph = new GraphGeometry('myCustomGraph', 2, 3, {
 ### Basic Shapes
 | Preset | Parameters | Description |
 |--------|------------|-------------|
-| `cube` | `size` | 8-node cube wireframe |
+| `cube` | `size`, `options` | 8-node cube wireframe (supports `includeFaceCenters` option) |
 | `pyramid` | `baseSize`, `height` | 5-node pyramid (4 base + 1 apex) |
 | `prism` | `width`, `height`, `depth` | Rectangular prism wireframe |
 | `octahedron` | `size` | 6-node octahedron |
 | `triangle` | `size` | 3-node triangle |
 | `line` | `length` | 2-node line segment |
-| `cone` | `radius`, `height`, `segments` | Cone with base ring |
+| `cone` | `radius`, `height`, `baseSegments`, `options` | Cone with base ring (supports `includeFaceCenters` option) |
 
 ### Network Structures
 | Preset | Parameters | Description |
@@ -168,7 +167,7 @@ const customGraph = new GraphGeometry('myCustomGraph', 2, 3, {
 | `star` | `count`, `radius` | Complete graph (all nodes connected) |
 | `grid` | `rows`, `cols`, `spacing` | 2D grid network |
 | `lattice` | `nx`, `ny`, `nz`, `spacing` | 3D lattice/grid |
-| `spokes` | `count`, `length`, `offset` | Hub with radiating spokes |
+| `spokes` | `count`, `length`, `angleOffset` | Hub with radiating spokes |
 
 ### Path-Based
 | Preset | Parameters | Description |
@@ -181,11 +180,15 @@ const customGraph = new GraphGeometry('myCustomGraph', 2, 3, {
 ```javascript
 // Basic shapes
 const cube = new GraphGeometry('cube', 2);
+const cubeWithFaceCenters = new GraphGeometry('cube', 2, { includeFaceCenters: true });
 const pyramid = new GraphGeometry('pyramid', 3, 2);
+const cone = new GraphGeometry('cone', 2, 3, 8);
+const coneWithBaseCenter = new GraphGeometry('cone', 2, 3, 8, { includeFaceCenters: true });
 
 // Networks  
 const star = new GraphGeometry('star', 6, 2);
-const grid = new GraphGeometry('grid', 4, 4, 1.5);
+const grid = new GraphGeometry('grid', 3, 3, 2);
+const lattice3D = new GraphGeometry('lattice', 2, 2, 2, 1.5);
 
 // Paths
 const polyline = new GraphGeometry('polyline', [
@@ -267,8 +270,8 @@ src/
 
 ## 🔧 Technical Requirements
 
-- **Three.js**: ^0.180.0
-- **lil-gui**: ^0.20.0 (for demo)
+- **Three.js**: >=0.170.0
+- **lil-gui**: ^0.20.0 (optional, for demo GUI)
 - **ES6+ Support**: Uses ES modules
 - **WebGL**: Requires WebGL-capable browser
 

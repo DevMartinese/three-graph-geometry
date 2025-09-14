@@ -117,7 +117,9 @@ export class BasicShapes {
     return { nodes, edges };
   }
 
-  static cone(radius = 2, height = 3, baseSegments = 8) {
+  static cone(radius = 2, height = 3, baseSegments = 8, options = {}) {
+    const { includeFaceCenters = false } = options;
+    
     const nodes = [new THREE.Vector3(0, height * 0.5, 0)];
     const edges = [];
 
@@ -133,6 +135,18 @@ export class BasicShapes {
     
     for (let i = 1; i <= baseSegments; i++) {
       edges.push([i, i === baseSegments ? 1 : i + 1]);
+    }
+
+    if (includeFaceCenters) {
+      // Add base center
+      const baseCenter = new THREE.Vector3(0, -height * 0.5, 0);
+      const baseCenterIdx = nodes.length;
+      nodes.push(baseCenter);
+      
+      // Connect base center to all base vertices
+      for (let i = 1; i <= baseSegments; i++) {
+        edges.push([baseCenterIdx, i]);
+      }
     }
 
     return { nodes, edges };
